@@ -198,49 +198,81 @@ public class Planetarium extends Application {
 
     private double mousePosX, mousePosY = 0;
 
-    private Group createSphereGroup() {
-        final Sphere sun = makePlaneta(radius.get("sun"), image.get("sun"), distance.get("sun"));
-        sun.setDrawMode(DrawMode.FILL);
-        sun.setTranslateY(radius.get("sun"));
-        return new Group(sun, makeAmbientLight());
-    }
-
-    private SubScene createSubScene() {
-        SubScene s = new SubScene(createSphereGroup(), 100, 100);
-        s.setCamera(new PerspectiveCamera());
-        s.setFill(Color.color(.1, .1, .1));
-        return s;
-    }
-
     @Override
     public void start(Stage stage) {
 
 
         //
 
-        radius.put("earth", 5.0);
+        radius.put("earth", 7.0);
         radius.put("moon", 1.0);
-        radius.put("sun", 10.0);
+        radius.put("sun", 20.0);
+        radius.put("mercurie", 3.0);
+        radius.put("venus", 5.0);
+        radius.put("mars", 10.0);
+        radius.put("kjupiter", 12.0);
+        radius.put("saturn", 15.0);
+        radius.put("neptune", 10.0);
 
-        distance.put("sun", -40.0);
-        distance.put("earth", 30.0);
-        distance.put("moon", 30.0);
+        distance.put("sun", -110.0);
+        distance.put("earth", -10.0);
+        distance.put("moon", 10.0);
+        distance.put("mercurie", -50.0);
+        distance.put("venus", -30.0);
+        distance.put("mars", 20.0);
+        distance.put("kjupiter", 50.0);
+        distance.put("saturn", 90.0);
+        distance.put("neptune", 130.0);
 
         orbita.put("moon", 10.0);
-        orbita.put("earth", 30.0);
+        orbita.put("earth", 100.0);
         orbita.put("sun", 0.0);
+        orbita.put("mercurie", 60.0);
+        orbita.put("venus", 80.0);
+        orbita.put("mars", 130.0);
+        orbita.put("kjupiter", 160.0);
+        orbita.put("saturn", 200.0);
+        orbita.put("neptune", 240.0);
 
-        duration.put("earth", 30.0);
+//        duration.put("earth", 60.0);
+//        duration.put("moon", 15.0);
+//        duration.put("sun", 100.0);
+//        duration.put("mercurie", 60.0);
+//        duration.put("venus", 60.0);
+//        duration.put("mars", 60.0);
+//        duration.put("kjupiter", 60.0);
+//        duration.put("saturn", 60.0);
+//        duration.put("neptune", 60.0);
+
+        duration.put("earth", 60.0);
         duration.put("moon", 15.0);
-        duration.put("sun", 50.0);
+        duration.put("sun", 100.0);
+        duration.put("mercurie", 70.0);
+        duration.put("venus", 80.0);
+        duration.put("mars", 90.0);
+        duration.put("kjupiter", 100.0);
+        duration.put("saturn", 110.0);
+        duration.put("neptune", 120.0);
 
         image.put("earth", "earth_flat.jpg");
         image.put("moon", "moon_flat.jpg");
         image.put("sun", "sun_flat.jpg");
+        image.put("mercurie", "mercury.jpg");
+        image.put("venus", "venus.jpg");
+        image.put("mars", "mars.png");
+        image.put("kjupiter", "kjupiter.jpg");
+        image.put("saturn", "saturn.jpg");
+        image.put("neptune", "neptune.jpg");
 
         revolutionAngle.put("earth", new SimpleDoubleProperty(0.0));
         revolutionAngle.put("moon", new SimpleDoubleProperty(0.0));
         revolutionAngle.put("sun", new SimpleDoubleProperty(0.0));
+        revolutionAngle.put("mercurie", new SimpleDoubleProperty(0.0));
+        revolutionAngle.put("venus", new SimpleDoubleProperty(0.0));
+        revolutionAngle.put("mars", new SimpleDoubleProperty(0.0));
+        revolutionAngle.put("kjupiter", new SimpleDoubleProperty(0.0));
+        revolutionAngle.put("saturn", new SimpleDoubleProperty(0.0));
+        revolutionAngle.put("neptune", new SimpleDoubleProperty(0.0));
 
         //
 
@@ -248,23 +280,32 @@ public class Planetarium extends Application {
 
         final Sphere earth = makePlaneta(radius.get("earth"), image.get("earth"), distance.get("earth"));
         final Sphere moon = makePlaneta(radius.get("moon"), image.get("moon"), distance.get("moon"));
-
         final Sphere sun = makePlaneta(radius.get("sun"), image.get("sun"), distance.get("sun"));
+        final Sphere mercurie = makePlaneta(radius.get("mercurie"), image.get("mercurie"), distance.get("mercurie"));
+        final Sphere venus = makePlaneta(radius.get("venus"), image.get("venus"), distance.get("venus"));
+        final Sphere mars = makePlaneta(radius.get("mars"), image.get("mars"), distance.get("mars"));
+        final Sphere kjupiter = makePlaneta(radius.get("kjupiter"), image.get("kjupiter"), distance.get("kjupiter"));
+        final Sphere saturn = makePlaneta(radius.get("saturn"), image.get("saturn"), distance.get("saturn"));
+        final Sphere neptune = makePlaneta(radius.get("neptune"), image.get("neptune"), distance.get("neptune"));
 
-        final PointLight light = makePointLight(distance.get("sun")+15, 0);
+        final PointLight light = makePointLight(distance.get("sun")+30, 0);
 
-        Group root = new Group(earth, moon, light, createSubScene() , this.camera);
-        //SubScene threeDScene = make3DScene(root, this.camera);
-        SubScene threeDScene = createSubScene();
+        Group root = new Group(earth, moon, sun, mercurie, venus, mars, kjupiter,saturn, neptune,light, camera);
+        SubScene threeDScene = make3DScene(root, camera);
         stage.setScene(makeScene(threeDScene));
         stage.setMaximized(true);
         stage.setTitle("XYQNA");
 
-        this.camera.getTransforms().addAll(rotateZ, rotateY, rotateX);
-
+        camera.getTransforms().addAll(rotateZ, rotateY, rotateX);
         handleMouse(stage.getScene());
         startOrbitaAnimation(sun, "sun", null);
         startOrbitaAnimation(earth, "earth", sun);
+        startOrbitaAnimation(mercurie, "mercurie", sun);
+        startOrbitaAnimation(venus, "venus", sun);
+        startOrbitaAnimation(mars, "mars", sun);
+        startOrbitaAnimation(kjupiter, "kjupiter", sun);
+        startOrbitaAnimation(saturn, "saturn", sun);
+        startOrbitaAnimation(neptune, "neptune", sun);
         startOrbitaAnimation(moon, "moon", earth);
         initCameraBindings();
         stage.show();
@@ -419,13 +460,6 @@ public class Planetarium extends Application {
 
     private PointLight makePointLight(double x, double y) {
         PointLight light = new PointLight(Color.WHITE);
-        light.setTranslateX(x);
-        light.setTranslateY(y);
-        return light;
-    }
-
-    private PointLight makePointLight2(double x, double y) {
-        PointLight light = new PointLight(Color.RED);
         light.setTranslateX(x);
         light.setTranslateY(y);
         return light;
